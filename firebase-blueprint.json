@@ -1,0 +1,375 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered MultiMart BD user profile with role and saved shipping addresses",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "role": { "type": "string", "enum": ["customer", "seller", "admin"] },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "preferredLang": { "type": "string", "enum": ["en", "bn"] },
+        "addresses": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "status", "createdAt", "updatedAt"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Explicitly granted marketplace administrator record",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "Seller": {
+      "title": "Seller",
+      "description": "Public storefront profile for a marketplace vendor",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "storeName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 140, "pattern": "^[a-z0-9\\-]+$" },
+        "descriptionEn": { "type": "string", "maxLength": 2000 },
+        "descriptionBn": { "type": "string", "maxLength": 2000 },
+        "division": { "type": "string", "maxLength": 60 },
+        "district": { "type": "string", "maxLength": 60 },
+        "logoUrl": { "type": "string", "maxLength": 1000 },
+        "bannerUrl": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "suspended"] },
+        "verified": { "type": "boolean" },
+        "ratingAverage": { "type": "number" },
+        "ratingCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "storeName", "slug", "division", "district", "status", "verified", "createdAt", "updatedAt"]
+    },
+    "SellerPrivate": {
+      "title": "SellerPrivate",
+      "description": "Private KYC and payout details isolated from public seller reads",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "phone": { "type": "string", "minLength": 6, "maxLength": 20 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "payoutMethod": { "type": "string", "enum": ["bkash", "nagad", "bank"] },
+        "payoutNumber": { "type": "string", "minLength": 5, "maxLength": 80 },
+        "nidNumber": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "phone", "email", "payoutMethod", "payoutNumber", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Bilingual marketplace product category",
+      "type": "object",
+      "properties": {
+        "nameEn": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "nameBn": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "slug": { "type": "string", "minLength": 1, "maxLength": 120, "pattern": "^[a-z0-9\\-]+$" },
+        "descriptionEn": { "type": "string", "maxLength": 500 },
+        "descriptionBn": { "type": "string", "maxLength": 500 },
+        "iconName": { "type": "string", "maxLength": 40 },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "sortOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nameEn", "nameBn", "slug", "sortOrder", "isActive", "createdAt", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Marketplace product listing priced in BDT",
+      "type": "object",
+      "properties": {
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "sellerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categorySlug": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "categoryNameEn": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "categoryNameBn": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "titleEn": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "titleBn": { "type": "string", "maxLength": 180 },
+        "descriptionEn": { "type": "string", "minLength": 2, "maxLength": 5000 },
+        "descriptionBn": { "type": "string", "maxLength": 5000 },
+        "price": { "type": "number" },
+        "compareAtPrice": { "type": "number" },
+        "stock": { "type": "number" },
+        "sku": { "type": "string", "maxLength": 64 },
+        "thumbnailUrl": { "type": "string", "maxLength": 1000 },
+        "images": { "type": "array" },
+        "specifications": { "type": "object" },
+        "tags": { "type": "array" },
+        "isActive": { "type": "boolean" },
+        "isApproved": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "ratingAverage": { "type": "number" },
+        "ratingCount": { "type": "number" },
+        "soldCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "sellerId",
+        "sellerName",
+        "categorySlug",
+        "titleEn",
+        "descriptionEn",
+        "price",
+        "stock",
+        "thumbnailUrl",
+        "images",
+        "isActive",
+        "isApproved",
+        "isFeatured",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer product review and star rating",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "minLength": 2, "maxLength": 1500 },
+        "verifiedPurchase": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "sellerId", "userId", "userName", "rating", "comment", "createdAt"]
+    },
+    "CartItem": {
+      "title": "CartItem",
+      "description": "Item stored in a user's persistent cart subcollection",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "sellerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "titleEn": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "titleBn": { "type": "string", "maxLength": 180 },
+        "price": { "type": "number" },
+        "quantity": { "type": "number" },
+        "thumbnailUrl": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "sellerId", "sellerName", "titleEn", "price", "quantity", "thumbnailUrl", "updatedAt"]
+    },
+    "WishlistItem": {
+      "title": "WishlistItem",
+      "description": "Saved product reference in a user's wishlist subcollection",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Vendor-scoped customer order in BDT",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "minLength": 3, "maxLength": 40 },
+        "checkoutGroupId": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "customerId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "customerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "customerPhone": { "type": "string", "minLength": 6, "maxLength": 20 },
+        "sellerId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "sellerName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "commissionAmount": { "type": "number" },
+        "sellerNetAmount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cod", "bkash", "nagad", "sslcommerz"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "paid", "failed", "refunded"] },
+        "orderStatus": { "type": "string", "enum": ["pending", "confirmed", "packed", "shipped", "delivered", "cancelled"] },
+        "shippingAddress": { "type": "object" },
+        "trackingCode": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "orderNumber",
+        "checkoutGroupId",
+        "customerId",
+        "customerName",
+        "customerPhone",
+        "sellerId",
+        "sellerName",
+        "items",
+        "subtotal",
+        "deliveryFee",
+        "totalAmount",
+        "paymentMethod",
+        "paymentStatus",
+        "orderStatus",
+        "shippingAddress",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Hero or category promotional banner managed by Admin",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "titleBn": { "type": "string", "maxLength": 160 },
+        "subtitleEn": { "type": "string", "maxLength": 300 },
+        "subtitleBn": { "type": "string", "maxLength": 300 },
+        "imageUrl": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "destinationUrl": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "placement": { "type": "string", "enum": ["hero", "category"] },
+        "categorySlug": { "type": "string", "maxLength": 120 },
+        "sortOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "impressions": { "type": "number" },
+        "clicks": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["titleEn", "imageUrl", "destinationUrl", "placement", "sortOrder", "isActive", "createdAt", "updatedAt"]
+    },
+    "Advertisement": {
+      "title": "Advertisement",
+      "description": "Sponsored advertisement placement managed by Admin",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "titleBn": { "type": "string", "maxLength": 160 },
+        "sponsorName": { "type": "string", "maxLength": 120 },
+        "imageUrl": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "destinationUrl": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "placement": { "type": "string", "enum": ["homepage_mid", "category_top", "bottom_page"] },
+        "categorySlug": { "type": "string", "maxLength": 120 },
+        "isActive": { "type": "boolean" },
+        "impressions": { "type": "number" },
+        "clicks": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["titleEn", "imageUrl", "destinationUrl", "placement", "isActive", "createdAt", "updatedAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification item",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "titleBn": { "type": "string", "maxLength": 160 },
+        "messageEn": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "messageBn": { "type": "string", "maxLength": 500 },
+        "linkUrl": { "type": "string", "maxLength": 300 },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["titleEn", "messageEn", "isRead", "createdAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Customer or seller support inquiry",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "userEmail": { "type": "string", "format": "email", "maxLength": 200 },
+        "subject": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "message": { "type": "string", "minLength": 5, "maxLength": 3000 },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["open", "in_progress", "resolved"] },
+        "adminReply": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "userEmail", "subject", "message", "status", "createdAt", "updatedAt"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "Global platform or homepage configuration document",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string", "maxLength": 100 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles and saved addresses"
+    },
+    "/users/{userId}/cart/{productId}": {
+      "schema": { "$ref": "#/entities/CartItem" },
+      "description": "Persistent shopping cart items per user"
+    },
+    "/users/{userId}/wishlist/{productId}": {
+      "schema": { "$ref": "#/entities/WishlistItem" },
+      "description": "Saved wishlist product references per user"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notifications"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Admin directory for RBAC"
+    },
+    "/sellers/{sellerId}": {
+      "schema": { "$ref": "#/entities/Seller" },
+      "description": "Public vendor storefronts"
+    },
+    "/sellers/{sellerId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/SellerPrivate" },
+      "description": "Private seller KYC and payout configuration"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Marketplace categories"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Multi-vendor product catalog"
+    },
+    "/products/{productId}/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Product customer reviews"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Vendor-scoped customer orders"
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Storefront hero and category banners"
+    },
+    "/advertisements/{adId}": {
+      "schema": { "$ref": "#/entities/Advertisement" },
+      "description": "Sponsored marketplace advertisement placements"
+    },
+    "/supportTickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Customer and seller support tickets"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Setting" },
+      "description": "Platform and homepage settings documents"
+    }
+  }
+}

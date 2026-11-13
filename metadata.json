@@ -1,0 +1,6 @@
+{
+  "name": "MultiMart BD",
+  "description": "Bangladesh's modern multi-vendor e-commerce marketplace featuring a bilingual Customer Storefront (EN/BN, BDT ৳), Seller Dashboard, and Admin Console powered by Firebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
